@@ -1,8 +1,4 @@
 from django.db import models
-from apps.student.models import Student
-
-
-# Create your models here.
 
 class Attendance(models.Model):
     attendance_choices = [
@@ -12,7 +8,6 @@ class Attendance(models.Model):
     ]
     
     
-    Attendance_id = models.AutoField(primary_key=True)
     Date = models.DateField(null=True, auto_now_add=True)
     State = models.CharField(max_length=8, choices=attendance_choices, default='Present')
     Student_id = models.ForeignKey('student.Student', blank=True, on_delete=models.PROTECT)
@@ -22,7 +17,12 @@ class Attendance(models.Model):
         return f'{self.State} {self.Date} {self.Class_id}'
 
     def save(self, *args, **kwargs):
+        # Importing here to avoid circular import errors
+        from apps.student.models import Student
+        from apps.classes.models import Classes
         super(Attendance, self).save(*args, **kwargs)
         student = Student.objects.get(Student_id = self.Student_id)
+        class_object = Classes.objects.get(Class_id = self.Class_id)
+        class_object.State.add(self)
         student.State.add(self)
             

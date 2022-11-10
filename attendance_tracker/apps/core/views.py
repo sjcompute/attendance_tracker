@@ -9,7 +9,12 @@ from apps.teacher.models import Teacher
 from apps.classes.models import Classes
 from apps.student.models import Student
 from apps.attendance.models import Attendance
+from rest_framework.decorators import api_view
 # Create your views here.
+
+
+
+
 
 class AttendanceView(viewsets.ModelViewSet):
    queryset = Attendance.objects.all()
@@ -26,10 +31,22 @@ class AttendanceView(viewsets.ModelViewSet):
          return Attendance.objects.filter(Student_id=studentid)
       elif classid != '':
          return Attendance.objects.filter(Class_id=classid)
+      else:
+         return Attendance.objects.all()
       #return Attendance.objects.filter(Student_id=studentid, Class_id=classid)
 class StudentView(viewsets.ModelViewSet):
    queryset = Student.objects.all()
    serializer_class = StudentSerializer
+   
+   
+   def get_queryset(self):
+      classid = self.request.GET.get('class_id', '')
+      if classid != '':
+            return Student.objects.filter(classes__Class_id__icontains=classid)
+      else:
+         return Student.objects.all()
+      
+
 
 class TeacherView(viewsets.ModelViewSet):
    queryset = Teacher.objects.all()
@@ -38,3 +55,4 @@ class TeacherView(viewsets.ModelViewSet):
 class ClassesView(viewsets.ModelViewSet):
    queryset = Classes.objects.all()
    serializer_class = ClassesSerializer
+   
