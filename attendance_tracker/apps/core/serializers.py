@@ -10,24 +10,24 @@ from apps.student.models import Student
 class AttendanceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Attendance
-        fields = ('State', 'Date', 'id')
+        fields = ('state', 'date', 'student_id', 'class_id','id')
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Student
-        fields = ('Student_id', 'First_name', 'Last_name', 'Class_id')
+        fields = ('student_id', 'first_name', 'last_name', 'class_id')
         #fields = '__all__'
 
 class ClassesSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
        model = Classes
-       fields = ('Class_id', 'Teacher_id', 'Student_id')
+       fields = ('class_id', 'teacher_id', 'student_id')
     
 class TeacherSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
        model = Teacher
        #fields = '__all__'
-       fields = ('Teacher_id', 'Class_id')
+       fields = ('teacher_id', 'class_id')
        

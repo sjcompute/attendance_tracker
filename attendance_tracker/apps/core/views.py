@@ -26,23 +26,26 @@ class AttendanceView(viewsets.ModelViewSet):
       # print(classid)
       print(Attendance.objects.all())
       if studentid != '' and classid != '':
-         return Attendance.objects.filter(Student_id=studentid, Class_id=classid)
+         return Attendance.objects.filter(student_id=studentid, class_id=classid)
       elif studentid != '':
-         return Attendance.objects.filter(Student_id=studentid)
+         return Attendance.objects.filter(student_id=studentid)
       elif classid != '':
-         return Attendance.objects.filter(Class_id=classid)
+         return Attendance.objects.filter(class_id=classid)
       else:
          return Attendance.objects.all()
-      #return Attendance.objects.filter(Student_id=studentid, Class_id=classid)
+      #return Attendance.objects.filter(student_id=studentid, class_id=classid)
+
+def postfunc():
+   print('post request')
+
 class StudentView(viewsets.ModelViewSet):
    queryset = Student.objects.all()
    serializer_class = StudentSerializer
    
-   
    def get_queryset(self):
       classid = self.request.GET.get('class_id', '')
       if classid != '':
-            return Student.objects.filter(classes__Class_id__icontains=classid)
+            return Student.objects.filter(classes__class_id__icontains=classid)
       else:
          return Student.objects.all()
       
